@@ -3,95 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Favorite Person</title>
+    <title>Will You Be My Valentine?</title>
     <style>
-        :root { --pink: #ffafcc; --dark-pink: #ff2e63; }
+        :root {
+            --pink: #ffafcc;
+            --dark-pink: #ff2e63;
+        }
+
         body {
-            margin: 0; padding: 0; display: flex; justify-content: center; 
-            align-items: center; height: 100vh; background-color: #ffcad4;
-            font-family: sans-serif; overflow: hidden; text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffcad4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
         }
+
         #container {
-            background: rgba(255, 255, 255, 0.9); padding: 2rem;
-            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            z-index: 10; width: 85%; max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 85%;
+            max-width: 400px;
+            position: relative;
         }
+
+        .gif-container img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            font-size: 1.8rem;
+            margin: 15px 0;
+        }
+
+        /* FIXED BUTTON ALIGNMENT */
         .buttons-container {
-            display: flex; justify-content: center; align-items: center;
-            gap: 20px; margin-top: 20px; min-height: 50px; position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            min-height: 60px; /* Prevents layout jump */
         }
+
         .btn {
-            padding: 12px 25px; border: none; border-radius: 50px;
-            cursor: pointer; font-weight: bold; font-size: 1rem;
-            transition: 0.2s; touch-action: manipulation;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            touch-action: manipulation; /* Fixes mobile lag */
         }
-        #yesBtn { background: #4CAF50; color: white; }
-        #noBtn { background: var(--dark-pink); color: white; position: relative; }
+
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+            position: relative;
+        }
+
+        #noBtn {
+            background-color: var(--dark-pink);
+            color: white;
+            position: relative; /* Starts next to Yes */
+        }
+
+        /* CONFETTI HEARTS */
         .heart {
-            position: absolute; color: var(--dark-pink); font-size: 1.5rem;
-            pointer-events: none; animation: fall linear forwards;
+            position: absolute;
+            color: var(--dark-pink);
+            font-size: 1.5rem;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
         }
-        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* PASSWORD SECTION */
+        input {
+            padding: 12px;
+            border: 2px solid var(--pink);
+            border-radius: 10px;
+            width: 80%;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 1rem;
+        }
+
         .hidden { display: none !important; }
-        input { padding: 10px; border-radius: 10px; border: 1px solid #ccc; width: 80%; margin-bottom: 10px; }
+
+        p { color: #555; line-height: 1.5; }
     </style>
 </head>
 <body>
+
     <div id="container">
         <div id="ask-section">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIycXNueXp5bmM1ZzRtc2ZqZzR5eGZqZzR5eGZqZzR5eGZqZzR5JnVwPTE/cLS1cfxvGOPVpf9g3y/giphy.gif" width="120">
+            <div class="gif-container">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIycXNueXp5bmM1ZzRtc2ZqZzR5eGZqZzR5eGZqZzR5eGZqZzR5JnVwPTE/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute Bear">
+            </div>
             <h1>Will you be my Valentine? 💖</h1>
             <div class="buttons-container">
-                <button id="yesBtn" class="btn" onclick="showPassword()">Yes!</button>
+                <button id="yesBtn" class="btn" onclick="showPassword()">Yes</button>
                 <button id="noBtn" class="btn" onmouseover="moveButton()" onclick="moveButton()">No</button>
             </div>
         </div>
 
         <div id="password-section" class="hidden">
             <h1>One more thing... 🔒</h1>
-            <p>Enter our "Secret Anniversary Month" to unlock:</p>
-            <input type="text" id="passwordInput" placeholder="e.g. August">
-            <button class="btn" style="background: var(--pink);" onclick="checkPassword()">Unlock ❤️</button>
+            <p>Enter our <b>"Secret Word"</b> to unlock your surprise:</p>
+            <input type="text" id="passwordInput" placeholder="Enter word here...">
+            <br>
+            <button class="btn" style="background: var(--pink); color: white;" onclick="checkPassword()">Unlock ❤️</button>
+            <p id="errorMsg" style="color: red; font-size: 0.8rem;" class="hidden">Try again, babe! 😘</p>
         </div>
 
         <div id="final-section" class="hidden">
-            <h1>I Love You! 🥰</h1>
-            <p>You make every day special. Happy Valentine's Day!</p>
+            <div class="gif-container">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2Z5ZzR5eGZqZzR5eGZqZzR5eGZqZzR5eGZqZzR5eGZqZzR5JnVwPTE/KztT2c4u8mYYUiCiC3/giphy.gif" alt="Happy Dance">
+            </div>
+            <h1>Yay! I Love You! 🥰</h1>
+            <p>You make every single day better just by being in it. Can't wait to celebrate with you!</p>
         </div>
     </div>
 
     <script>
-        const SECRET_PASSWORD = 'august'; // <-- CHANGE THIS WORD
+        // 1. SET YOUR SECRET PASSWORD HERE (Lowercase)
+        const SECRET_PASSWORD = 'august'; 
 
+        // 2. RUNAWAY BUTTON LOGIC
         function moveButton() {
             const btn = document.getElementById('noBtn');
-            btn.style.position = 'absolute';
+            // Make it float above everything else once it starts moving
+            btn.style.position = 'fixed';
+            
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
             const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.left = x + 'px'; btn.style.top = y + 'px';
+            
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
         }
 
+        // 3. FALLING HEARTS LOGIC
         function createHeart() {
             const heart = document.createElement('div');
-            heart.classList.add('heart'); heart.innerHTML = '❤️';
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.opacity = Math.random();
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 5000);
         }
-        setInterval(createHeart, 300);
+        setInterval(createHeart, 400);
 
+        // 4. TRANSITION TO PASSWORD
         function showPassword() {
             document.getElementById('ask-section').classList.add('hidden');
             document.getElementById('password-section').classList.remove('hidden');
         }
 
+        // 5. FINAL REVEAL
         function checkPassword() {
-            if(document.getElementById('passwordInput').value.toLowerCase() === SECRET_PASSWORD) {
+            const input = document.getElementById('passwordInput').value.toLowerCase().trim();
+            if(input === SECRET_PASSWORD) {
                 document.getElementById('password-section').classList.add('hidden');
                 document.getElementById('final-section').classList.remove('hidden');
+                // Explosion of hearts
+                for(let i=0; i<40; i++) {
+                    setTimeout(createHeart, i * 100);
+                }
+            } else {
+                document.getElementById('errorMsg').classList.remove('hidden');
             }
         }
     </script>
 </body>
 </html>
+
