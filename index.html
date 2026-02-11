@@ -14,15 +14,19 @@
             margin: 0;
             background-color: #ffe6e6;
             font-family: 'Arial', sans-serif;
-            text-align: center;
+            overflow: hidden; /* Prevents scrollbars when button moves */
         }
 
-        h1 { color: #d63384; }
+        .container {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
 
-        .container { position: relative; }
+        h1 { color: #d63384; margin-bottom: 20px; }
 
         img {
-            width: 200px;
+            width: 250px;
+            border-radius: 15px;
             margin-bottom: 20px;
         }
 
@@ -31,6 +35,7 @@
             gap: 20px;
             justify-content: center;
             align-items: center;
+            min-height: 150px; /* Space for growing button */
         }
 
         button {
@@ -39,33 +44,27 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s ease;
         }
 
         #yesBtn {
             background-color: #4CAF50;
             color: white;
+            z-index: 10; /* Keep Yes on top */
         }
 
         #noBtn {
             background-color: #f44336;
             color: white;
-            position: absolute;
-        }
-
-        .success-message {
-            display: none;
-            color: #d63384;
-            font-size: 2rem;
-            font-weight: bold;
+            position: relative;
         }
     </style>
 </head>
 <body>
 
-    <div id="main-content">
-        <h1>Will you be my Valentine? 💕</h1>
-        <img id="display-img" src="https://media.tenor.com/EBV7OT7ACfwAAAAj/u-u-qua-qua-u-quaa.gif" alt="Cute GIF">
+    <div class="container" id="main-content">
+        <h1 id="question">Will you be my Valentine? 💕</h1>
+        <img id="main-gif" src="https://media.tenor.com/EBV7OT7ACfwAAAAj/u-u-qua-qua-u-quaa.gif" alt="Cute GIF">
         
         <div class="buttons">
             <button id="yesBtn">Yes</button>
@@ -73,31 +72,59 @@
         </div>
     </div>
 
-    <div id="success-message" class="success-message">
-        Yay! See you on the 14th! 🥰
-        <br>
-        <img src="https://media.tenor.com/9T_S6N6f6v8AAAAj/peach-goma.gif" alt="Happy GIF">
-    </div>
-
     <script>
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
-        const mainContent = document.getElementById('main-content');
-        const successMessage = document.getElementById('success-message');
+        const mainGif = document.getElementById('main-gif');
+        const question = document.getElementById('question');
 
-        // Logic to make the 'No' button run away
-        noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        let clickCount = 0;
+        let yesScale = 1;
+        let noScale = 1;
+
+        // Array of funny GIFs to cycle through when they click No
+        const gifs = [
+            "https://media.tenor.com/9T_S6N6f6v8AAAAj/peach-goma.gif",
+            "https://media.tenor.com/z_mG7vP2Y_8AAAAj/tkthao219-bubududu.gif",
+            "https://media.tenor.com/6X2hM_H0m_UAAAAj/bubu-dudu-bubu.gif",
+            "https://media.tenor.com/V7-9V56y-m8AAAAj/bubu-dudu-sweet-home.gif"
+        ];
+
+        noBtn.addEventListener('click', () => {
+            clickCount++;
             
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+            // 1. Increase Yes button size
+            yesScale += 0.4;
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            // 2. Shrink No button size
+            noScale -= 0.1;
+            noBtn.style.transform = `scale(${noScale})`;
+
+            // 3. Change the GIF
+            mainGif.src = gifs[clickCount % gifs.length];
+
+            // 4. Update text for drama
+            if (clickCount === 1) question.innerText = "Are you sure? 🥺";
+            if (clickCount === 3) question.innerText = "Pookie please... 😭";
+            if (clickCount === 5) question.innerText = "Don't do this to me!";
         });
 
-        // Logic for clicking 'Yes'
+        // 5. Hover Logic (Threshold: Move when button gets very small)
+        noBtn.addEventListener('mouseover', () => {
+            if (clickCount >= 5) {
+                noBtn.style.position = 'absolute';
+                const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+                const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+            }
+        });
+
+        // 6. Final Page Redirect
         yesBtn.addEventListener('click', () => {
-            mainContent.style.display = 'none';
-            successMessage.style.display = 'block';
+            // Since we are on GitHub Pages, we can redirect to yes.html
+            window.location.href = "yes.html";
         });
     </script>
 </body>
